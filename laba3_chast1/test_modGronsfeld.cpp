@@ -13,10 +13,17 @@ TEST(TestConstructorEmptyKey) {
     CHECK_THROW(modAlphaCipher(L""), std::invalid_argument);
 }
 
+TEST(TestConstructorInvalidKeyWithDigits) {
+    CHECK_THROW(modAlphaCipher(L"123"), std::invalid_argument);
+}
+
+TEST(TestConstructorInvalidKeyWithSpecialChars) {
+    CHECK_THROW(modAlphaCipher(L"0"), std::invalid_argument);
+}
+
 TEST(TestEncryptEmptyText) {
     modAlphaCipher cipher(L"БКД");
-    std::wstring encrypted = cipher.encrypt(L"");
-    CHECK(encrypted == L"");
+    CHECK_THROW(cipher.encrypt(L""), std::invalid_argument);
 }
 
 TEST(TestEncryptTextWithLowerCase) {
@@ -37,8 +44,7 @@ TEST(TestEncryptValidText) {
 
 TEST(TestDecryptEmptyText) {
     modAlphaCipher cipher(L"БКД");
-    std::wstring decrypted = cipher.decrypt(L"");
-    CHECK(decrypted == L"");
+    CHECK_THROW(cipher.decrypt(L""), std::invalid_argument);
 }
 
 TEST(TestDecryptTextWithLowerCase) {
