@@ -24,4 +24,3 @@ public:
     std::wstring encrypt(const std::wstring& open_text);   // шифрование
     std::wstring decrypt(const std::wstring& cipher_text); // расшифрование
 };
-
