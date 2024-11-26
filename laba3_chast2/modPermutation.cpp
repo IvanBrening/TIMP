@@ -7,7 +7,7 @@ modPermutationCipher::modPermutationCipher(const std::wstring& skey) {
     if (skey.empty()) {
         throw std::invalid_argument("Ошибка: ключ не может быть пустым. Пожалуйста, введите положительное целое число.");
     }
-    alphabet = L"АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯabcdefghijklmnopqrstuvwxyz"; // поддержка русского и английского алфавитов
+    alphabet = L"АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ"; // поддержка русского и английского алфавитов
     validateKey(skey);
     for (auto& ch : skey) {
         key.push_back(wchar_t(ch) - L'0');
@@ -74,4 +74,5 @@ std::wstring modPermutationCipher::decrypt(const std::wstring& cipher_text) {
     }
     return result;
 }
+
 
