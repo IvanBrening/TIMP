@@ -1,50 +1,76 @@
 #include <UnitTest++/UnitTest++.h>
 #include "modPermutation.h"
+#include <locale>
+#include <codecvt>
 
-// Тест на шифрование пустого текста
+std::string wstring_to_string(const std::wstring& wstr) {
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+    return converter.to_bytes(wstr);
+}
+
+TEST(TestConstructorValidKey) {
+    modPermutationCipher cipher(L"123"); 
+    CHECK(true);
+}
+
+TEST(TestConstructorInvalidKeyNonDigit) {
+    CHECK_THROW(modPermutationCipher(L"бкд"), std::invalid_argument);
+}
+
+TEST(TestConstructorEmptyKey) {
+    CHECK_THROW(modPermutationCipher(L""), std::invalid_argument);
+}
+
 TEST(TestEncryptEmptyText) {
-    modPermutationCipher cipher(L"123"); // Пример ключа
-    CHECK_THROW(cipher.encrypt(L""), std::invalid_argument); // Ожидаем исключение
+    modPermutationCipher cipher(L"123");
+    CHECK_THROW(cipher.encrypt(L""), std::invalid_argument);
 }
 
-// Тест на дешифрование пустого текста
+TEST(TestEncryptLowerCaseText) {
+    modPermutationCipher cipher(L"123");
+    CHECK_THROW(cipher.encrypt(L"бгеж"), std::invalid_argument);
+}
+
+TEST(TestEncryptLatinText) {
+    modPermutationCipher cipher(L"123");
+    CHECK_THROW(cipher.encrypt(L"Hello"), std::invalid_argument);
+}
+
+TEST(TestEncryptValidText) {
+    modPermutationCipher cipher(L"123");
+    std::wstring encrypted = cipher.encrypt(L"БГЕЖ");
+    CHECK_EQUAL(wstring_to_string(encrypted), "ВЕЗЗ");
+}
+
 TEST(TestDecryptEmptyText) {
-    modPermutationCipher cipher(L"123"); // Пример ключа
-    CHECK_THROW(cipher.decrypt(L""), std::invalid_argument); // Ожидаем исключение
+    modPermutationCipher cipher(L"123");
+    CHECK_THROW(cipher.decrypt(L""), std::invalid_argument);
 }
 
-// Тест на шифрование текста с невалидным символом
-TEST(TestForeignCharacterInText) {
-    modPermutationCipher cipher(L"123"); // Пример ключа
-    CHECK_THROW(cipher.encrypt(L"Hello"), std::invalid_argument); // Ожидаем исключение
+TEST(TestDecryptValidText) {
+    modPermutationCipher cipher(L"123");
+    std::wstring decrypted = cipher.decrypt(L"ВЕЗЗ");
+    CHECK_EQUAL(wstring_to_string(decrypted), "БГЕЖ");
 }
 
-// Тест на правильность шифрования
-TEST(TestEncryptionCorrectness) {
-    modPermutationCipher cipher(L"123"); // Пример ключа
-    std::wstring encrypted = cipher.encrypt(L"БГЕЖ"); // Здесь проверьте ожидаемый результат
-    CHECK(encrypted == L"ВЕЗЗ"); // Ожидаемый результат должен быть проверен
+TEST(TestDecryptLowerCaseText) {
+    modPermutationCipher cipher(L"123");
+    CHECK_THROW(cipher.decrypt(L"бгеж"), std::invalid_argument);
 }
 
-// Тест на правильность дешифрования
-TEST(TestDecryptionCorrectness) {
-    modPermutationCipher cipher(L"123"); // Пример ключа
-    std::wstring decrypted = cipher.decrypt(L"ВЕЗЗ"); // Здесь проверьте ожидаемый результат
-    CHECK(decrypted == L"БГЕЖ"); // Ожидаемый результат должен быть проверен
+TEST(TestDecryptLatinText) {
+    modPermutationCipher cipher(L"123");
+    CHECK_THROW(cipher.decrypt(L"Hello"), std::invalid_argument);
 }
 
-// Тест на шифрование текста с невалидным ключом
 TEST(TestInvalidKey) {
-    CHECK_THROW(modPermutationCipher cipher(L"abc"), std::invalid_argument); // Ожидаем исключение
+    CHECK_THROW(modPermutationCipher(L"abc"), std::invalid_argument);
 }
 
-// Тест на шифрование текста с нулевым ключом
 TEST(TestZeroKey) {
-    CHECK_THROW(modPermutationCipher cipher(L"0"), std::invalid_argument); // Ожидаем исключение
+    CHECK_THROW(modPermutationCipher(L"0"), std::invalid_argument);
 }
 
-// Основная функция для запуска тестов
 int main() {
     return UnitTest::RunAllTests();
 }
-
