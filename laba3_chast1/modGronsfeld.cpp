@@ -18,7 +18,7 @@ std::vector<int> modAlphaCipher::convert(const std::wstring& s) {
     std::vector<int> result;
     for (auto c : s) {
         if (alphaNum.find(c) == alphaNum.end()) {
-            throw std::invalid_argument("Invalid character in text.");
+            throw std::invalid_argument("Invalid character in key.");
         }
         result.push_back(alphaNum[c]);
     }
@@ -39,6 +39,10 @@ std::wstring modAlphaCipher::convert(const std::vector<int>& v) {
 
 // Шифрование текста
 std::wstring modAlphaCipher::encrypt(const std::wstring& open_text) {
+    if (open_text.empty()) {
+        throw std::invalid_argument("Text cannot be empty");
+    }
+
     try {
         std::vector<int> work = convert(open_text);
         for (unsigned i = 0; i < work.size(); i++) {
@@ -53,6 +57,10 @@ std::wstring modAlphaCipher::encrypt(const std::wstring& open_text) {
 
 // Расшифрование текста
 std::wstring modAlphaCipher::decrypt(const std::wstring& cipher_text) {
+    if (cipher_text.empty()) {
+        throw std::invalid_argument("Text cannot be empty");
+    }
+
     try {
         std::vector<int> work = convert(cipher_text);
         for (unsigned i = 0; i < work.size(); i++) {
@@ -64,3 +72,4 @@ std::wstring modAlphaCipher::decrypt(const std::wstring& cipher_text) {
         throw;
     }
 }
+
