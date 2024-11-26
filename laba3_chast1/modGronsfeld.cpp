@@ -2,9 +2,14 @@
 
 // Конструктор, инициализирующий ключ
 modAlphaCipher::modAlphaCipher(const std::wstring& skey) {
+    if (skey.empty()) {
+        throw std::invalid_argument("Key cannot be empty");
+    }
+
     for (unsigned i = 0; i < numAlpha.size(); i++) {
         alphaNum[numAlpha[i]] = i;
     }
+
     key = convert(skey);
 }
 
@@ -24,7 +29,6 @@ std::vector<int> modAlphaCipher::convert(const std::wstring& s) {
 std::wstring modAlphaCipher::convert(const std::vector<int>& v) {
     std::wstring result;
     for (size_t i = 0; i < v.size(); ++i) {
-        // Преобразуем v[i] в size_t для сравнения
         if (static_cast<size_t>(v[i]) >= numAlpha.size()) {
             throw std::invalid_argument("Index out of bounds");
         }
@@ -32,7 +36,6 @@ std::wstring modAlphaCipher::convert(const std::vector<int>& v) {
     }
     return result;
 }
-
 
 // Шифрование текста
 std::wstring modAlphaCipher::encrypt(const std::wstring& open_text) {
@@ -61,5 +64,3 @@ std::wstring modAlphaCipher::decrypt(const std::wstring& cipher_text) {
         throw;
     }
 }
-
-
