@@ -10,7 +10,7 @@
 class modPermutationCipher {
 private:
     std::wstring alphabet; // алфавит
-    std::vector<int> key; // ключ в виде вектора
+    std::vector<int> key;  // ключ в виде вектора
 
 public:
     modPermutationCipher(const std::wstring& skey); // конструктор с ключом
